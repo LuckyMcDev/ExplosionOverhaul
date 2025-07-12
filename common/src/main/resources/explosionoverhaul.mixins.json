@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "de.luckydev.explosionoverhaul.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+  ],
+  "mixins": [
+    "ExplosionMixin",
+    "PlayerCameraShakeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

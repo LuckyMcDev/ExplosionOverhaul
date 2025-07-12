@@ -1,0 +1,16 @@
+.gradle
+.idea
+
+
+build
+common/build
+common/.gradle
+
+neoforge/build
+neoforge/.gradle
+
+fabric/run
+neoforge/run
+
+fabric/build
+fabric/.gradle

@@ -1,0 +1,8 @@
+{
+  "config.explosion-overhaul.title": "Explosion Overhaul",
+  "config.explosion-overhaul.category.general": "General",
+  "config.explosion-overhaul.category.debris": "Debris",
+  "config.explosion-overhaul.category.screenshake": "Screen Shake",
+  "config.explosion-overhaul.enableScreenShake": "Enable Screen Shake",
+  "config.explosion-overhaul.shakeIntensity": "Shake Intensity"
+}
