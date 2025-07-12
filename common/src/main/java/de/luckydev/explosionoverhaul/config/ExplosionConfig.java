@@ -3,6 +3,7 @@ package de.luckydev.explosionoverhaul.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.minecraft.util.math.random.Random;
 
 import java.io.File;
 import java.io.FileReader;
@@ -99,5 +100,70 @@ public class ExplosionConfig {
         } catch (IOException e) {
             throw new RuntimeException("Failed to write explosion-overhaul config", e);
         }
+    }
+
+    public double getSpawnProbability() {
+        return spawnProbabilityPercent / 100.0;
+    }
+
+    public double getMinHorizontalSpeed() {
+        return minHorizontalSpeedPercent / 100.0;
+    }
+
+    public double getMaxHorizontalSpeed() {
+        return maxHorizontalSpeedPercent / 100.0;
+    }
+
+    public double getMinUpwardForce() {
+        return minUpwardForcePercent / 100.0;
+    }
+
+    public double getMaxUpwardForce() {
+        return maxUpwardForcePercent / 100.0;
+    }
+
+    // Returns a random horizontal speed in range [min, max]
+    public double getRandomHorizontalSpeed(Random random) {
+        double min = getMinHorizontalSpeed();
+        double max = getMaxHorizontalSpeed();
+        return min + random.nextDouble() * (max - min);
+    }
+
+    // Returns a random upward force in range [min, max]
+    public double getRandomUpwardForce(Random random) {
+        double min = getMinUpwardForce();
+        double max = getMaxUpwardForce();
+        return min + random.nextDouble() * (max - min);
+    }
+
+    // Converts intensity percent to multiplier
+    public float getShakeIntensityMultiplier() {
+        return shakeIntensityPercent / 100.0f;
+    }
+
+    // Converts rotation multiplier percent to multiplier
+    public float getShakeRotationMultiplier() {
+        return shakeRotationMultiplier / 100.0f;
+    }
+
+    // Returns a shake duration in ticks from configured min/max range
+    public int getShakeDuration(Random random) {
+        return minShakeDurationTicks + random.nextInt(maxShakeDurationTicks - minShakeDurationTicks + 1);
+    }
+
+    // Calculates final shake strength
+    public float calculateShakeStrength(float explosionPower) {
+        if (!shakeScalesWithPower) {
+            return getShakeIntensityMultiplier() * 10;
+        }
+        return Math.min(explosionPower * 0.5f * getShakeIntensityMultiplier(), 10);
+    }
+
+    // Calculates shake radius
+    public float calculateShakeRadius(float explosionPower) {
+        if (!shakeScalesWithPower) {
+            return maxShakeRadius;
+        }
+        return Math.min(explosionPower * 2.0f, maxShakeRadius);
     }
 }
