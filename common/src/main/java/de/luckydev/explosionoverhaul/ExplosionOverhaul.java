@@ -2,6 +2,7 @@ package de.luckydev.explosionoverhaul;
 
 import de.luckydev.explosionoverhaul.config.ExplosionConfig;
 import de.luckydev.explosionoverhaul.shake.ScreenShakeHandler;
+import de.luckydev.explosionoverhaul.util.RegistryHelper;
 import dev.architectury.event.events.client.ClientTickEvent;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.BlockState;

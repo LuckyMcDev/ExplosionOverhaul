@@ -22,7 +22,7 @@ public class PlayerCameraShakeMixin {
 
         if (shakeX != 0f || shakeY != 0f) {
             // Apply shake to camera rotation with configurable multiplier
-            float multiplier = ExplosionOverhaul.CONFIG.getShakeRotationMultiplier();
+            float multiplier = ExplosionOverhaul.CONFIG.shakeIntensityMultiplier;
             float pitchShake = shakeY * multiplier;
             float yawShake = shakeX * multiplier;
 

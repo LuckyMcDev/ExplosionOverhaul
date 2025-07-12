@@ -1,4 +1,3 @@
-// ExplosionConfig.java
 package de.luckydev.explosionoverhaul.config;
 
 import com.google.gson.Gson;
@@ -13,29 +12,28 @@ import java.io.IOException;
 public class ExplosionConfig {
     public boolean enabled = true;
 
+    // Debris settings
     public int maxFallingBlocks = 50;
     public int spawnProbabilityPercent = 30;
-
     public int minHorizontalSpeedPercent = 30;
     public int maxHorizontalSpeedPercent = 70;
-
     public int minUpwardForcePercent = 10;
     public int maxUpwardForcePercent = 30;
-
     public boolean allowUnbreakableBlocks = false;
     public boolean randomRotation = true;
 
+    // Screen shake settings - much more reasonable values
     public boolean enableScreenShake = true;
-    public int shakeIntensityPercent = 100;
-    public int maxShakeRadius = 20;
-    public int minShakeDurationTicks = 20;
-    public int maxShakeDurationTicks = 60;
-    public int shakeRotationMultiplier = 200;
-    public boolean shakeScalesWithPower = true;
+    public float baseShakeStrength = 0.4f;        // Base shake strength (0.0 to 1.0)
+    public float maxShakeStrength = 1.0f;         // Maximum shake strength
+    public float shakeRadius = 20.0f;             // Radius in blocks where shake is felt
+    public int minShakeDurationTicks = 10;        // Minimum shake duration
+    public int maxShakeDurationTicks = 60;        // Maximum shake duration
+    public boolean shakeScalesWithPower = true;   // Whether shake scales with explosion power
+    public float shakeIntensityMultiplier = 1.0f; // Global multiplier for shake intensity
 
     public boolean debugLogging = false;
 
-    // Optional clamping logic
     public void clamp() {
         maxFallingBlocks = clamp(maxFallingBlocks, 1, 200);
         spawnProbabilityPercent = clamp(spawnProbabilityPercent, 0, 100);
@@ -56,19 +54,26 @@ public class ExplosionConfig {
             minUpwardForcePercent = tmp;
         }
 
-        shakeIntensityPercent = clamp(shakeIntensityPercent, 0, 500);
-        maxShakeRadius = clamp(maxShakeRadius, 1, 50);
-        minShakeDurationTicks = clamp(minShakeDurationTicks, 10, 1000);
-        maxShakeDurationTicks = clamp(maxShakeDurationTicks, 10, 1000);
+        // Clamp shake values to reasonable ranges
+        baseShakeStrength = clampFloat(baseShakeStrength, 0.0f, 1.0f);
+        maxShakeStrength = clampFloat(maxShakeStrength, 0.0f, 2.0f);
+        shakeRadius = clampFloat(shakeRadius, 1.0f, 100.0f);
+        shakeIntensityMultiplier = clampFloat(shakeIntensityMultiplier, 0.0f, 3.0f);
+
+        minShakeDurationTicks = clamp(minShakeDurationTicks, 1, 200);
+        maxShakeDurationTicks = clamp(maxShakeDurationTicks, 1, 200);
         if (maxShakeDurationTicks < minShakeDurationTicks) {
             int tmp = maxShakeDurationTicks;
             maxShakeDurationTicks = minShakeDurationTicks;
             minShakeDurationTicks = tmp;
         }
-        shakeRotationMultiplier = clamp(shakeRotationMultiplier, 1, 1000);
     }
 
     private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    private float clampFloat(float value, float min, float max) {
         return Math.max(min, Math.min(max, value));
     }
 
@@ -78,7 +83,7 @@ public class ExplosionConfig {
     public static ExplosionConfig load() {
         if (!CONFIG_FILE.exists()) {
             ExplosionConfig defaultConfig = new ExplosionConfig();
-            defaultConfig.save(); // write defaults
+            defaultConfig.save();
             return defaultConfig;
         }
 
@@ -102,6 +107,7 @@ public class ExplosionConfig {
         }
     }
 
+    // Debris methods
     public double getSpawnProbability() {
         return spawnProbabilityPercent / 100.0;
     }
@@ -122,48 +128,38 @@ public class ExplosionConfig {
         return maxUpwardForcePercent / 100.0;
     }
 
-    // Returns a random horizontal speed in range [min, max]
     public double getRandomHorizontalSpeed(Random random) {
         double min = getMinHorizontalSpeed();
         double max = getMaxHorizontalSpeed();
         return min + random.nextDouble() * (max - min);
     }
 
-    // Returns a random upward force in range [min, max]
     public double getRandomUpwardForce(Random random) {
         double min = getMinUpwardForce();
         double max = getMaxUpwardForce();
         return min + random.nextDouble() * (max - min);
     }
 
-    // Converts intensity percent to multiplier
-    public float getShakeIntensityMultiplier() {
-        return shakeIntensityPercent / 100.0f;
-    }
-
-    // Converts rotation multiplier percent to multiplier
-    public float getShakeRotationMultiplier() {
-        return shakeRotationMultiplier / 100.0f;
-    }
-
-    // Returns a shake duration in ticks from configured min/max range
+    // Screen shake methods - much more reasonable calculations
     public int getShakeDuration(Random random) {
         return minShakeDurationTicks + random.nextInt(maxShakeDurationTicks - minShakeDurationTicks + 1);
     }
 
-    // Calculates final shake strength
     public float calculateShakeStrength(float explosionPower) {
         if (!shakeScalesWithPower) {
-            return getShakeIntensityMultiplier() * 10;
+            return baseShakeStrength * shakeIntensityMultiplier;
         }
-        return Math.min(explosionPower * 0.5f * getShakeIntensityMultiplier(), 10);
+
+        // Scale with explosion power but keep it reasonable
+        float scaledStrength = baseShakeStrength + (explosionPower * 0.02f);
+        return Math.min(scaledStrength * shakeIntensityMultiplier, maxShakeStrength);
     }
 
-    // Calculates shake radius
     public float calculateShakeRadius(float explosionPower) {
         if (!shakeScalesWithPower) {
-            return maxShakeRadius;
+            return shakeRadius;
         }
-        return Math.min(explosionPower * 2.0f, maxShakeRadius);
+        // Scale radius with explosion power
+        return Math.min(explosionPower * 3.0f, shakeRadius);
     }
 }
