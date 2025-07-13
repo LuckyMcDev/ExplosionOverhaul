@@ -26,7 +26,6 @@ public final class ExplosionOverhaul {
     private static final Map<Explosion, ObjectArrayList<Snapshot>> SNAPSHOTS = new WeakHashMap<>();
 
     public static void init() {
-        // 1) register & grab config
         CONFIG = ExplosionConfig.load();
 
         ClientTickEvent.CLIENT_POST.register(client -> {

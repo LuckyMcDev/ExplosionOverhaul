@@ -90,42 +90,6 @@ public class ExplosionPhysicsHandler {
             spawned++;
         }
 
-
-        int baseY = affected.stream().mapToInt(BlockPos::getY).min().orElse(BlockPos.ofFloored(center).getY() - 1);
-        BlockPos centerFloor = BlockPos.ofFloored(center).withY(baseY);
-
-        int radius = 4;
-        Random rand = world.getRandom();
-
-        for (BlockPos pos : BlockPos.iterateOutwards(centerFloor, radius, 0, radius)) {
-            // Basic distance-based falloff
-            double dx = pos.getX() + 0.5 - centerFloor.getX();
-            double dz = pos.getZ() + 0.5 - centerFloor.getZ();
-            double distSq = dx * dx + dz * dz;
-
-            if (distSq > radius * radius) continue;
-
-            // Simple noise-like variation
-            double noise = (Math.sin(dx * 1.2) + Math.cos(dz * 1.7)) * 0.5 + rand.nextDouble() * 0.5;
-
-            // Apply a wavy Y offset (-1 to +1)
-            int yOffset = rand.nextInt(3) - 1;
-            BlockPos target = pos.down(yOffset);
-
-            BlockState current = world.getBlockState(target);
-            if (!current.isReplaceable()) continue;
-
-            // Blend between gray and light gray based on distance and noise
-            double weight = MathHelper.clamp((distSq / (radius * radius)) + (noise * 0.2), 0.0, 1.0);
-            BlockState newState = (weight < 0.5)
-                    ? Blocks.GRAY_CONCRETE_POWDER.getDefaultState()
-                    : Blocks.LIGHT_GRAY_CONCRETE_POWDER.getDefaultState();
-
-            server.setBlockState(target, newState);
-        }
-
-
-
         // Add screen shake with new config options
         if (CONFIG.enableScreenShake) {
             float shakeStrength = CONFIG.calculateShakeStrength(explosion.getPower());
