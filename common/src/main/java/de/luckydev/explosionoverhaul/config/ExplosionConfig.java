@@ -2,12 +2,12 @@ package de.luckydev.explosionoverhaul.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.util.math.random.Random;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class ExplosionConfig {
     public boolean enabled = true;
@@ -22,16 +22,20 @@ public class ExplosionConfig {
     public boolean allowUnbreakableBlocks = false;
     public boolean randomRotation = true;
 
-    // Screen shake settings - much more reasonable values
+    // Screen shake settings
     public boolean enableScreenShake = true;
-    public float baseShakeStrength = 0.4f;        // Base shake strength (0.0 to 1.0)
-    public float maxShakeStrength = 1.0f;         // Maximum shake strength
-    public float shakeRadius = 20.0f;             // Radius in blocks where shake is felt
-    public int minShakeDurationTicks = 10;        // Minimum shake duration
-    public int maxShakeDurationTicks = 60;        // Maximum shake duration
-    public boolean shakeScalesWithPower = true;   // Whether shake scales with explosion power
-    public float shakeIntensityMultiplier = 1.0f; // Global multiplier for shake intensity
+    public float baseShakeStrength = 0.4f;
+    public float maxShakeStrength = 1.0f;
+    public float shakeRadius = 20.0f;
+    public int minShakeDurationTicks = 10;
+    public int maxShakeDurationTicks = 60;
+    public boolean shakeScalesWithPower = true;
+    public float shakeIntensityMultiplier = 1.0f;
 
+    // Sound
+    public boolean playRingingSound = false;
+
+    // Debug
     public boolean debugLogging = false;
 
     public void clamp() {
@@ -54,7 +58,6 @@ public class ExplosionConfig {
             minUpwardForcePercent = tmp;
         }
 
-        // Clamp shake values to reasonable ranges
         baseShakeStrength = clampFloat(baseShakeStrength, 0.0f, 1.0f);
         maxShakeStrength = clampFloat(maxShakeStrength, 0.0f, 2.0f);
         shakeRadius = clampFloat(shakeRadius, 1.0f, 100.0f);
@@ -99,7 +102,10 @@ public class ExplosionConfig {
     public void save() {
         try {
             CONFIG_FILE.getParentFile().mkdirs();
-            try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
+            try (Writer writer = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
+                // Custom GSON pretty-print with tabs
+                String prettyJson = GSON.toJson(JsonParser.parseReader(new FileReader(CONFIG_FILE)));
+                prettyJson = prettyJson.replace("  ", "\t");
                 GSON.toJson(this, writer);
             }
         } catch (IOException e) {
@@ -107,7 +113,7 @@ public class ExplosionConfig {
         }
     }
 
-    // Debris methods
+    // Debris
     public double getSpawnProbability() {
         return spawnProbabilityPercent / 100.0;
     }
@@ -140,7 +146,7 @@ public class ExplosionConfig {
         return min + random.nextDouble() * (max - min);
     }
 
-    // Screen shake methods - much more reasonable calculations
+    // Shake
     public int getShakeDuration(Random random) {
         return minShakeDurationTicks + random.nextInt(maxShakeDurationTicks - minShakeDurationTicks + 1);
     }
@@ -150,7 +156,6 @@ public class ExplosionConfig {
             return baseShakeStrength * shakeIntensityMultiplier;
         }
 
-        // Scale with explosion power but keep it reasonable
         float scaledStrength = baseShakeStrength + (explosionPower * 0.02f);
         return Math.min(scaledStrength * shakeIntensityMultiplier, maxShakeStrength);
     }
@@ -159,7 +164,6 @@ public class ExplosionConfig {
         if (!shakeScalesWithPower) {
             return shakeRadius;
         }
-        // Scale radius with explosion power
         return Math.min(explosionPower * 3.0f, shakeRadius);
     }
 }
