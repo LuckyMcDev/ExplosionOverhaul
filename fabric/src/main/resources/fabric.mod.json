@@ -3,15 +3,15 @@
   "id": "explosionoverhaul",
   "version": "${version}",
   "name": "Explosion Overhaul",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Enhances Minecraft explosions with physics-based debris, screen shake, sound effects, and remote detonation.",
   "authors": [
-    "Me!"
+    "LuckyDev"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/LuckyMcDev/ExplosionOverhaul",
+    "sources": "https://github.com/LuckyMcDev/ExplosionOverhaul"
   },
-  "license": "CC0-1.0",
+  "license": "Apache License 2.0",
   "icon": "assets/explosionoverhaul/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -19,7 +19,7 @@
       "de.luckydev.explosionoverhaul.fabric.ExplosionOverhaulFabric"
     ],
     "client": [
-      "de.luckydev.explosionoverhaul.fabric.ExplosionOverhaulFabric"
+      "de.luckydev.explosionoverhaul.fabric.ExplosionOverhaulFabricClient"
     ]
   },
   "mixins": [

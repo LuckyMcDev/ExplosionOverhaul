@@ -28,11 +28,5 @@ public final class ExplosionOverhaul {
     public static void init() {
         CONFIG = ExplosionConfig.load();
 
-        ClientTickEvent.CLIENT_POST.register(client -> {
-            if (!client.isPaused()) {
-                ScreenShakeHandler.tick();
-            }
-        });
-
     }
 }

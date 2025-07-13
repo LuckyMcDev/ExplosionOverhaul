@@ -1,17 +1,16 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+license = "Apache License 2.0"
 
 [[mods]]
 modId = "explosionoverhaul"
 version = "${version}"
 displayName = "Explosion Overhaul"
-authors = "Me!"
+authors = "LuckyDev"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Enhances Minecraft explosions with debris physics, screen shake, remote detonation, and cinematic effects.
 '''
-#logoFile = ""
+logoFile = "assets/explosionoverhaul/icon.png"
 
 [[dependencies.explosionoverhaul]]
 modId = "neoforge"
