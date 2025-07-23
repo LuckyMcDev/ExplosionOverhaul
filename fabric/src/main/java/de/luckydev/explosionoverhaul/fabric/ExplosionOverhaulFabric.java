@@ -1,20 +1,12 @@
 package de.luckydev.explosionoverhaul.fabric;
 
 import de.luckydev.explosionoverhaul.ExplosionOverhaul;
-import de.luckydev.explosionoverhaul.ExplosionOverhaulClient;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 
-public class ExplosionOverhaulFabric implements ModInitializer, ClientModInitializer {
+public class ExplosionOverhaulFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
         ExplosionOverhaul.init();
-    }
-
-    @Override
-    public void onInitializeClient() {
-        ExplosionOverhaulClient.init();
     }
 }
