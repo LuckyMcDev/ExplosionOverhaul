@@ -22,13 +22,6 @@ public class ExplosionMixin {
 
     @Shadow @Final private World world;
 
-    // Hook into collectBlocksAndDamageEntities to capture blocks before they're processed
-    @Inject(method = "collectBlocksAndDamageEntities", at = @At("TAIL"))
-    private void onCollectBlocks(CallbackInfo ci) {
-        Explosion explosion = (Explosion) (Object) this;
-        ExplosionPhysicsHandler.captureBlocksBeforeDestruction(world, explosion);
-    }
-
     // Hook into affectWorld at HEAD to handle our custom logic before vanilla processing
     @Inject(method = "affectWorld", at = @At("HEAD"))
     private void onPreAffectWorld(boolean spawnParticles, CallbackInfo ci) {

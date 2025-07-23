@@ -25,51 +25,21 @@ public class ExplosionPhysicsHandler {
 
     private static final ExplosionConfig CONFIG = ExplosionOverhaul.CONFIG;
 
-    private static final Map<Explosion, ObjectArrayList<BlockSnapshot>> BLOCK_SNAPSHOTS = new WeakHashMap<>();
-
-    private record BlockSnapshot(BlockPos pos, BlockState state) {}
-
-    public static void captureBlocksBeforeDestruction(World world, Explosion explosion) {
-        if (world.isClient() || !CONFIG.enabled) return;
-
-        ObjectArrayList<BlockSnapshot> snapshots = new ObjectArrayList<>();
-
-        for (BlockPos pos : explosion.getAffectedBlocks()) {
-            BlockState state = world.getBlockState(pos);
-
-            if (state.isAir()) continue;
-            if (!CONFIG.allowUnbreakableBlocks && state.getHardness(world, pos) < 0) continue;
-
-            snapshots.add(new BlockSnapshot(pos, state));
-        }
-
-        BLOCK_SNAPSHOTS.put(explosion, snapshots);
-
-        if (CONFIG.debugLogging) {
-            ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Captured {} block snapshots at {}",
-                    snapshots.size(), explosion.getPosition());
-        }
-    }
-
     /**
      * Process the explosion before vanilla logic destroys blocks.
      * This replaces blocks we want to turn into debris with air to prevent duplication.
      */
     public static void processExplosion(World world, Explosion explosion) {
         if (world.isClient() || !CONFIG.enabled) {
-            BLOCK_SNAPSHOTS.remove(explosion);
             return;
         }
-
-        ObjectArrayList<BlockSnapshot> snapshots = BLOCK_SNAPSHOTS.remove(explosion);
-        if (snapshots == null || snapshots.isEmpty()) return;
 
         if (!(world instanceof ServerWorld serverWorld)) return;
 
         Vec3d explosionCenter = explosion.getPosition();
 
         // Process debris spawning and block replacement
-        int debrisSpawned = spawnDebris(serverWorld, explosionCenter, snapshots);
+        int debrisSpawned = spawnDebris(serverWorld, explosionCenter, explosion.getAffectedBlocks());
 
         // Add screen shake
         addScreenShake(explosionCenter, explosion.getPower(), serverWorld);
@@ -80,50 +50,30 @@ public class ExplosionPhysicsHandler {
         }
     }
 
-    private static int spawnDebris(ServerWorld world, Vec3d explosionCenter, ObjectArrayList<BlockSnapshot> snapshots) {
+    private static int spawnDebris(ServerWorld world, Vec3d explosionCenter, List<BlockPos> affectedBlocks) {
         int spawned = 0;
 
-        for (int i = snapshots.size() - 1; i > 0; i--) {
-            int j = world.random.nextInt(i + 1);
-            BlockSnapshot temp = snapshots.get(i);
-            snapshots.set(i, snapshots.get(j));
-            snapshots.set(j, temp);
-        }
-
-        for (BlockSnapshot snapshot : snapshots) {
+        for (BlockPos pos: affectedBlocks) {
             if (spawned >= CONFIG.maxFallingBlocks) break;
 
-            BlockPos pos = snapshot.pos();
-            BlockState state = snapshot.state();
+            BlockState state = world.getBlockState(pos);
 
-            BlockState currentState = world.getBlockState(pos);
-            if (currentState.isAir()) continue;
+            if (!canBeLaunched(state)) continue;
 
-            // TNT should use default handling to avoid breaking machinery
-            if (currentState.isOf(Blocks.TNT)) continue;
+            if (world.random.nextDouble() > CONFIG.getSpawnProbability()) continue;
 
-            if (world.random.nextDouble() > CONFIG.getSpawnProbability()) {
-                continue;
-            }
 
+            createFallingBlock(world, pos, state, explosionCenter);
 
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 
-
-            FallingBlockEntity fallingBlock = createFallingBlock(world, pos, state, explosionCenter);
-            if (fallingBlock != null) {
-                spawned++;
-            }
+            spawned++;
         }
 
         return spawned;
     }
 
-    private static FallingBlockEntity createFallingBlock(ServerWorld world, BlockPos pos, BlockState state, Vec3d explosionCenter) {
-
-        if (!canBeLaunched(state)) {
-            return null;
-        }
+    private static void createFallingBlock(ServerWorld world, BlockPos pos, BlockState state, Vec3d explosionCenter) {
 
         FallingBlockEntity fallingBlock = FallingBlockEntity.spawnFromBlock(world, pos, state);
 
@@ -170,8 +120,6 @@ public class ExplosionPhysicsHandler {
         if (CONFIG.randomRotation) {
             fallingBlock.setYaw(world.random.nextFloat() * 360f);
         }
-
-        return fallingBlock;
     }
 
     private static void addScreenShake(Vec3d explosionCenter, float explosionPower, ServerWorld world) {
@@ -191,14 +139,13 @@ public class ExplosionPhysicsHandler {
 
     private static boolean canBeLaunched(BlockState state) {
         // Exclude air blocks
-        if (state.isAir()) {
-            return false;
-        }
+        if (state.isAir()) return false;
+
+        // Exclude TNT blocks to avoid breaking contraptions or duping TNT
+        if (state.isOf(Blocks.TNT)) return false;
 
         // Check if the block is in the replaceable tag
-        if (state.isIn(BlockTags.REPLACEABLE)) {
-            return false;
-        }
+        if (state.isIn(BlockTags.REPLACEABLE)) return false;
 
         return true;
     }
