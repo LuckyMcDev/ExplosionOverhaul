@@ -22,11 +22,19 @@ public class ExplosionMixin {
 
     @Shadow @Final private World world;
 
-    @Inject(method = "affectWorld", at = @At("HEAD"))
-    private void onPre(boolean spawnParticles, CallbackInfo ci) {
+    // Hook into collectBlocksAndDamageEntities to capture blocks before they're processed
+    @Inject(method = "collectBlocksAndDamageEntities", at = @At("TAIL"))
+    private void onCollectBlocks(CallbackInfo ci) {
         Explosion explosion = (Explosion) (Object) this;
-        ExplosionPhysicsHandler.onPre(world, explosion);
+        ExplosionPhysicsHandler.captureBlocksBeforeDestruction(world, explosion);
+    }
 
+    // Hook into affectWorld at HEAD to handle our custom logic before vanilla processing
+    @Inject(method = "affectWorld", at = @At("HEAD"))
+    private void onPreAffectWorld(boolean spawnParticles, CallbackInfo ci) {
+        Explosion explosion = (Explosion) (Object) this;
+
+        // Handle sound effects
         if (!world.isClient && ExplosionOverhaul.CONFIG.playRingingSound) {
             Vec3d pos = explosion.getPosition();
             Identifier sound = Identifier.of("explosionoverhaul", "explosion.ear_ringing_after_explosion");
@@ -37,11 +45,8 @@ public class ExplosionMixin {
                 }
             }
         }
-    }
 
-    @Inject(method = "affectWorld", at = @At("TAIL"))
-    private void onPost(boolean spawnParticles, CallbackInfo ci) {
-        Explosion explosion = (Explosion) (Object) this;
-        ExplosionPhysicsHandler.onDetonate(world, explosion);
+        // Process our custom explosion physics before vanilla block destruction
+        ExplosionPhysicsHandler.processExplosion(world, explosion);
     }
 }
