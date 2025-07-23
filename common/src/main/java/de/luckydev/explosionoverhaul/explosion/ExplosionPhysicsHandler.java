@@ -127,8 +127,6 @@ public class ExplosionPhysicsHandler {
 
         FallingBlockEntity fallingBlock = FallingBlockEntity.spawnFromBlock(world, pos, state);
 
-        if (fallingBlock == null) return null;
-
         Vec3d blockCenter = Vec3d.ofCenter(pos);
         Vec3d direction = blockCenter.subtract(explosionCenter);
 
