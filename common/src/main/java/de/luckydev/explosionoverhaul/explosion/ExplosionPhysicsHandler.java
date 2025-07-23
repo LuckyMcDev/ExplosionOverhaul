@@ -99,6 +99,9 @@ public class ExplosionPhysicsHandler {
             BlockState currentState = world.getBlockState(pos);
             if (currentState.isAir()) continue;
 
+            // TNT should use default handling to avoid breaking machinery
+            if (currentState.isOf(Blocks.TNT)) continue;
+
             if (world.random.nextDouble() > CONFIG.getSpawnProbability()) {
                 continue;
             }
@@ -120,11 +123,6 @@ public class ExplosionPhysicsHandler {
 
         if (!canBeLaunched(state)) {
             return null;
-        }
-
-        // Check for tnt, and make it primed
-        if (state.isOf(Blocks.TNT)) {
-            processTNT(world, pos, explosionCenter);
         }
 
         FallingBlockEntity fallingBlock = FallingBlockEntity.spawnFromBlock(world, pos, state);
@@ -205,25 +203,5 @@ public class ExplosionPhysicsHandler {
         }
 
         return true;
-    }
-
-    private static FallingBlockEntity processTNT(ServerWorld world, BlockPos pos, Vec3d explosionCenter) {
-        int fuseTicks = 10 + world.random.nextInt(30);
-        TntEntity tntEntity = new TntEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, null);
-        tntEntity.setFuse(fuseTicks);
-
-        Vec3d blockCenter = Vec3d.ofCenter(pos);
-        Vec3d direction = blockCenter.subtract(explosionCenter).normalize();
-
-        double horizontalSpeed = CONFIG.getRandomHorizontalSpeed(world.random) * 0.8;
-        double upwardForce = CONFIG.getRandomUpwardForce(world.random) * 1.2;
-
-        Vec3d velocity = direction.multiply(horizontalSpeed).add(0, upwardForce, 0);
-        tntEntity.setVelocity(velocity);
-        tntEntity.velocityModified = true;
-
-        // Spawn the TNT entity
-        world.spawnEntity(tntEntity);
-        return null;
     }
 }
