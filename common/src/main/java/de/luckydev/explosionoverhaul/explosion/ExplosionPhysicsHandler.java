@@ -5,21 +5,15 @@ import de.luckydev.explosionoverhaul.config.ExplosionConfig;
 import de.luckydev.explosionoverhaul.shake.PositionedScreenShake;
 import de.luckydev.explosionoverhaul.shake.ScreenShakeHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.TntEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class ExplosionPhysicsHandler {
 
@@ -29,20 +23,18 @@ public class ExplosionPhysicsHandler {
      * Process the explosion before vanilla logic destroys blocks.
      * This replaces blocks we want to turn into debris with air to prevent duplication.
      */
-    public static void processExplosion(World world, Explosion explosion) {
+    public static void processExplosion(World world, Vec3d explosionCenter, ObjectArrayList<BlockPos> affectedBlocks, float power) {
         if (world.isClient() || !CONFIG.enabled) {
             return;
         }
 
         if (!(world instanceof ServerWorld serverWorld)) return;
 
-        Vec3d explosionCenter = explosion.getPosition();
-
         // Process debris spawning and block replacement
-        int debrisSpawned = spawnDebris(serverWorld, explosionCenter, explosion.getAffectedBlocks());
+        int debrisSpawned = spawnDebris(serverWorld, explosionCenter, affectedBlocks);
 
         // Add screen shake
-        addScreenShake(explosionCenter, explosion.getPower(), serverWorld);
+        addScreenShake(explosionCenter, power, serverWorld);
 
         if (CONFIG.debugLogging) {
             ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Processed explosion at {} - Spawned {} debris blocks",
@@ -50,10 +42,14 @@ public class ExplosionPhysicsHandler {
         }
     }
 
-    private static int spawnDebris(ServerWorld world, Vec3d explosionCenter, List<BlockPos> affectedBlocks) {
+    private static int spawnDebris(ServerWorld world, Vec3d explosionCenter, ObjectArrayList<BlockPos> affectedBlocks) {
         int spawned = 0;
 
-        for (BlockPos pos: affectedBlocks) {
+        ObjectListIterator<BlockPos> affectedBlocksIterator = affectedBlocks.iterator();
+
+        while (affectedBlocksIterator.hasNext()) {
+            BlockPos pos = affectedBlocksIterator.next();
+
             if (spawned >= CONFIG.maxFallingBlocks) break;
 
             BlockState state = world.getBlockState(pos);
@@ -64,6 +60,8 @@ public class ExplosionPhysicsHandler {
 
 
             createFallingBlock(world, pos, state, explosionCenter);
+
+            affectedBlocks.remove(pos);
 
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 

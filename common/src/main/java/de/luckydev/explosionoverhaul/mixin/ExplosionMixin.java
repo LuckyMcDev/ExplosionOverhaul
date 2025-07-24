@@ -3,10 +3,12 @@ package de.luckydev.explosionoverhaul.mixin;
 import de.luckydev.explosionoverhaul.ExplosionOverhaul;
 import de.luckydev.explosionoverhaul.explosion.ExplosionPhysicsHandler;
 import de.luckydev.explosionoverhaul.explosion.ExplosionSoundHandler;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -18,28 +20,32 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Explosion.class)
-public class ExplosionMixin {
+public abstract class ExplosionMixin {
 
     @Shadow @Final private World world;
+
+    @Shadow public abstract Vec3d getPosition();
+
+    @Shadow @Final private ObjectArrayList<BlockPos> affectedBlocks;
+
+    @Shadow public float power;
 
     // Hook into affectWorld at HEAD to handle our custom logic before vanilla processing
     @Inject(method = "affectWorld", at = @At("HEAD"))
     private void onPreAffectWorld(boolean spawnParticles, CallbackInfo ci) {
-        Explosion explosion = (Explosion) (Object) this;
 
         // Handle sound effects
         if (!world.isClient && ExplosionOverhaul.CONFIG.playRingingSound) {
-            Vec3d pos = explosion.getPosition();
             Identifier sound = Identifier.of("explosionoverhaul", "explosion.ear_ringing_after_explosion");
 
             for (PlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                if (player.squaredDistanceTo(pos) < 20.0 * 20.0) {
+                if (player.squaredDistanceTo(getPosition()) < 20.0 * 20.0) {
                     ExplosionSoundHandler.play(world, player.getPos(), sound, SoundCategory.AMBIENT, 1.0f, 1.0f);
                 }
             }
         }
 
         // Process our custom explosion physics before vanilla block destruction
-        ExplosionPhysicsHandler.processExplosion(world, explosion);
+        ExplosionPhysicsHandler.processExplosion(world, getPosition(), affectedBlocks, power);
     }
 }
