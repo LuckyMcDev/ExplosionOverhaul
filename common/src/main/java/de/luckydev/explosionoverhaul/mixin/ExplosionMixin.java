@@ -2,11 +2,9 @@ package de.luckydev.explosionoverhaul.mixin;
 
 import de.luckydev.explosionoverhaul.ExplosionOverhaul;
 import de.luckydev.explosionoverhaul.explosion.ExplosionPhysicsHandler;
-import de.luckydev.explosionoverhaul.explosion.ExplosionSoundHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -33,19 +31,16 @@ public abstract class ExplosionMixin {
     // Hook into affectWorld at HEAD to handle our custom logic before vanilla processing
     @Inject(method = "affectWorld", at = @At("HEAD"))
     private void onPreAffectWorld(boolean spawnParticles, CallbackInfo ci) {
+        Vec3d pos = getPosition();
 
         // Handle sound effects
-        if (!world.isClient && ExplosionOverhaul.CONFIG.playRingingSound) {
-            Identifier sound = Identifier.of("explosionoverhaul", "explosion.ear_ringing_after_explosion");
+        if (world.isClient && ExplosionOverhaul.CONFIG.playRingingSound) {
+            Identifier sound = ; // Add registered sound event here
 
-            for (PlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                if (player.squaredDistanceTo(getPosition()) < 20.0 * 20.0) {
-                    ExplosionSoundHandler.play(world, player.getPos(), sound, SoundCategory.AMBIENT, 1.0f, 1.0f);
-                }
-            }
+            world.playSound(pos.x, pos.y, pos.z, SoundEvent.of(sound), SoundCategory.AMBIENT, 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
         }
 
         // Process our custom explosion physics before vanilla block destruction
-        ExplosionPhysicsHandler.processExplosion(world, getPosition(), affectedBlocks, power);
+        ExplosionPhysicsHandler.processExplosion(world, pos, affectedBlocks, power);
     }
 }

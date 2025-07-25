@@ -1,11 +1,11 @@
 {
-  "explosion.ear_ringing_after_explosion": {
+  "ear_ringing_after_explosion": {
     "sounds": [
       {
-        "name": "explosionoverhaul:explosion/ear_ringing_after_explosion",
-        "volume": 1.0,
-        "pitch": 1.0
+        "type": "event",
+        "name": "explosionoverhaul:ear_ringing_after_explosion"
       }
-    ]
+    ],
+    "subtitle": "explosionoverhaul.subtitle.ear_ringing_after_explosion"
   }
 }
