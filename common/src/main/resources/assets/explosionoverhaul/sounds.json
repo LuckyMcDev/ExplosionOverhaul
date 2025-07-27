@@ -2,8 +2,8 @@
   "ear_ringing_after_explosion": {
     "sounds": [
       {
-        "type": "event",
-        "name": "explosionoverhaul:ear_ringing_after_explosion"
+        "name": "explosionoverhaul:ear_ringing_after_explosion",
+        "stream": false
       }
     ],
     "subtitle": "explosionoverhaul.subtitle.ear_ringing_after_explosion"

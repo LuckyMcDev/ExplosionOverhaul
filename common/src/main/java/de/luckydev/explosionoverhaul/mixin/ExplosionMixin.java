@@ -2,6 +2,7 @@ package de.luckydev.explosionoverhaul.mixin;
 
 import de.luckydev.explosionoverhaul.ExplosionOverhaul;
 import de.luckydev.explosionoverhaul.explosion.ExplosionPhysicsHandler;
+import de.luckydev.explosionoverhaul.sound.ModSounds;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -34,10 +35,9 @@ public abstract class ExplosionMixin {
         Vec3d pos = getPosition();
 
         // Handle sound effects
-        if (world.isClient && ExplosionOverhaul.CONFIG.playRingingSound) {
-            Identifier sound = ; // Add registered sound event here
-
-            world.playSound(pos.x, pos.y, pos.z, SoundEvent.of(sound), SoundCategory.AMBIENT, 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
+        if (ExplosionOverhaul.CONFIG.playRingingSound) {
+            System.out.println("Ringing sound: " + ModSounds.RINGING);
+            world.playSound(pos.x, pos.y, pos.z, ModSounds.RINGING, SoundCategory.AMBIENT, 10.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
         }
 
         // Process our custom explosion physics before vanilla block destruction
