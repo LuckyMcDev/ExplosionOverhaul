@@ -1,11 +1,14 @@
 package de.luckydev.explosionoverhaul.shake;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@Environment(EnvType.CLIENT)
 public class ScreenShakeHandler {
     private static final List<ScreenShake> activeShakes = new CopyOnWriteArrayList<>();
 

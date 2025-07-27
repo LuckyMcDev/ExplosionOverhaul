@@ -2,6 +2,7 @@ package de.luckydev.explosionoverhaul.explosion;
 
 import de.luckydev.explosionoverhaul.ExplosionOverhaul;
 import de.luckydev.explosionoverhaul.config.ExplosionConfig;
+import de.luckydev.explosionoverhaul.network.NetworkHandler;
 import de.luckydev.explosionoverhaul.shake.PositionedScreenShake;
 import de.luckydev.explosionoverhaul.shake.ScreenShakeHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -144,7 +145,7 @@ public class ExplosionPhysicsHandler {
         float shakeRadius = CONFIG.calculateShakeRadius(explosionPower);
         int shakeDuration = CONFIG.getShakeDuration(world.random);
 
-        ScreenShakeHandler.addShake(new PositionedScreenShake(explosionCenter, shakeRadius, shakeStrength, shakeDuration));
+        NetworkHandler.sendScreenShake(world, explosionCenter, shakeRadius, shakeStrength, shakeDuration);
 
         if (CONFIG.debugLogging) {
             ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Added screen shake - Strength: {}, Radius: {}, Duration: {}",
