@@ -6,8 +6,7 @@ import de.luckydev.explosionoverhaul.shake.PositionedScreenShake;
 import de.luckydev.explosionoverhaul.shake.ScreenShakeHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
@@ -15,9 +14,27 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ExplosionPhysicsHandler {
 
     private static final ExplosionConfig CONFIG = ExplosionOverhaul.CONFIG;
+
+    private static final Set<Class<? extends Block>> MULTIBLOCK_CLASSES = new HashSet<>();
+
+    static {
+        MULTIBLOCK_CLASSES.add(BedBlock.class);
+        MULTIBLOCK_CLASSES.add(DoorBlock.class);
+        MULTIBLOCK_CLASSES.add(StairsBlock.class);
+        MULTIBLOCK_CLASSES.add(FenceGateBlock.class);
+        MULTIBLOCK_CLASSES.add(TrapdoorBlock.class);
+        MULTIBLOCK_CLASSES.add(ChestBlock.class);
+        MULTIBLOCK_CLASSES.add(TrappedChestBlock.class);
+        MULTIBLOCK_CLASSES.add(BarrelBlock.class);
+        MULTIBLOCK_CLASSES.add(BannerBlock.class);
+        MULTIBLOCK_CLASSES.add(WallBannerBlock.class);
+    }
 
     /**
      * Process the explosion before vanilla logic destroys blocks.
@@ -135,15 +152,23 @@ public class ExplosionPhysicsHandler {
         }
     }
 
+    private static boolean isMultiblockPart(Block block) {
+        for (Class<? extends Block> clazz : MULTIBLOCK_CLASSES) {
+            if (clazz.isInstance(block)) return true;
+        }
+        return false;
+    }
+
     private static boolean canBeLaunched(BlockState state) {
-        // Exclude air blocks
         if (state.isAir()) return false;
 
-        // Exclude TNT blocks to avoid breaking contraptions or duping TNT
+        if(!state.isSolid()) return false;
+
         if (state.isOf(Blocks.TNT)) return false;
 
-        // Check if the block is in the replaceable tag
         if (state.isIn(BlockTags.REPLACEABLE)) return false;
+
+        if (isMultiblockPart(state.getBlock())) return false;
 
         return true;
     }
