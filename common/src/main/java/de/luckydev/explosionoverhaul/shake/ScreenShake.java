@@ -1,10 +1,13 @@
 package de.luckydev.explosionoverhaul.shake;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
 
 /**
  * A camera shake centered on the player.
  */
+@Environment(EnvType.CLIENT)
 public class ScreenShake {
     protected final float strength;
     protected final int duration;

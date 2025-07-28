@@ -1,11 +1,14 @@
 package de.luckydev.explosionoverhaul.shake;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 /**
  * A screen shake at a world position that fades with distance.
  */
+@Environment(EnvType.CLIENT)
 public class PositionedScreenShake extends ScreenShake {
     private final Vec3d origin;
     private final float radius;

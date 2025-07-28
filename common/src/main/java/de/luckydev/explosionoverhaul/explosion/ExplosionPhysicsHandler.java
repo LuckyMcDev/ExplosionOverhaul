@@ -2,9 +2,6 @@ package de.luckydev.explosionoverhaul.explosion;
 
 import de.luckydev.explosionoverhaul.ExplosionOverhaul;
 import de.luckydev.explosionoverhaul.config.ExplosionConfig;
-import de.luckydev.explosionoverhaul.network.NetworkHandler;
-import de.luckydev.explosionoverhaul.shake.PositionedScreenShake;
-import de.luckydev.explosionoverhaul.shake.ScreenShakeHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.block.*;
@@ -51,9 +48,6 @@ public class ExplosionPhysicsHandler {
         // Process debris spawning and block replacement
         int debrisSpawned = spawnDebris(serverWorld, explosionCenter, affectedBlocks);
 
-        // Add screen shake
-        addScreenShake(explosionCenter, power, serverWorld);
-
         if (CONFIG.debugLogging) {
             ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Processed explosion at {} - Spawned {} debris blocks",
                     explosionCenter, debrisSpawned);
@@ -76,7 +70,6 @@ public class ExplosionPhysicsHandler {
 
             if (world.random.nextDouble() > CONFIG.getSpawnProbability()) continue;
 
-
             createFallingBlock(world, pos, state, explosionCenter);
 
             affectedBlocks.remove(pos);
@@ -90,7 +83,6 @@ public class ExplosionPhysicsHandler {
     }
 
     private static void createFallingBlock(ServerWorld world, BlockPos pos, BlockState state, Vec3d explosionCenter) {
-
         FallingBlockEntity fallingBlock = FallingBlockEntity.spawnFromBlock(world, pos, state);
 
         Vec3d blockCenter = Vec3d.ofCenter(pos);
@@ -130,26 +122,11 @@ public class ExplosionPhysicsHandler {
         fallingBlock.setVelocity(velocity);
         fallingBlock.velocityModified = true;
 
-        //Fixes UUID warning
+        // Fixes UUID warning
         fallingBlock.setUuid(java.util.UUID.randomUUID());
 
         if (CONFIG.randomRotation) {
             fallingBlock.setYaw(world.random.nextFloat() * 360f);
-        }
-    }
-
-    private static void addScreenShake(Vec3d explosionCenter, float explosionPower, ServerWorld world) {
-        if (!CONFIG.enableScreenShake) return;
-
-        float shakeStrength = CONFIG.calculateShakeStrength(explosionPower);
-        float shakeRadius = CONFIG.calculateShakeRadius(explosionPower);
-        int shakeDuration = CONFIG.getShakeDuration(world.random);
-
-        NetworkHandler.sendScreenShake(world, explosionCenter, shakeRadius, shakeStrength, shakeDuration);
-
-        if (CONFIG.debugLogging) {
-            ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Added screen shake - Strength: {}, Radius: {}, Duration: {}",
-                    shakeStrength, shakeRadius, shakeDuration);
         }
     }
 
