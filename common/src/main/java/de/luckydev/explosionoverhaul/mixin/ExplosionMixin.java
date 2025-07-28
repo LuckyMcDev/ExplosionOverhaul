@@ -54,8 +54,14 @@ public abstract class ExplosionMixin {
         // Handle sound effects
         if (ExplosionOverhaul.CONFIG.playRingingSound) {
             if (ModSounds.RINGING != null) {
-                world.playSound(pos.x, pos.y, pos.z, ModSounds.RINGING, SoundCategory.AMBIENT,
-                        10.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
+                world.playSound(
+                        pos.x, pos.y, pos.z,
+                        ModSounds.RINGING,
+                        SoundCategory.AMBIENT,
+                        10.0F,
+                        (float) ((1.0F + (Math.random()) * 0.2F) * 0.7F),
+                        false
+                );
 
                 if (ExplosionOverhaul.CONFIG.debugLogging) {
                     ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Playing ringing sound at {}", pos);

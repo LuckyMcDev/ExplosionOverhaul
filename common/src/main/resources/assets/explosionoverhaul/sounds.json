@@ -1,11 +1,11 @@
 {
   "ear_ringing_after_explosion": {
+    "subtitle": "explosionoverhaul.subtitles.ear_ringing_after_explosion",
     "sounds": [
       {
         "name": "explosionoverhaul:ear_ringing_after_explosion",
         "stream": false
       }
-    ],
-    "subtitle": "explosionoverhaul.subtitle.ear_ringing_after_explosion"
+    ]
   }
 }

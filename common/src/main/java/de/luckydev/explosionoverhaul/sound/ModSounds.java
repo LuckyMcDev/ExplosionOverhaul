@@ -12,12 +12,6 @@ public class ModSounds {
     public static SoundEvent RINGING;
 
     public static void init() {
-        RINGING = register(RINGING_ID);
-    }
-
-    private static SoundEvent register(Identifier id) {
-        SoundEvent event = SoundEvent.of(id);
-        Registry.register(Registries.SOUND_EVENT, id, event);
-        return event;
+        RINGING = Registry.register(Registries.SOUND_EVENT, RINGING_ID, SoundEvent.of(RINGING_ID));
     }
 }
