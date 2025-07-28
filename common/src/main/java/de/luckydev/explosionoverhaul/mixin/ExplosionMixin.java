@@ -53,8 +53,16 @@ public abstract class ExplosionMixin {
     private void ExplosionMixin$handleClientSideEffects(Vec3d pos) {
         // Handle sound effects
         if (ExplosionOverhaul.CONFIG.playRingingSound) {
-            world.playSound(pos.x, pos.y, pos.z, ModSounds.RINGING, SoundCategory.AMBIENT,
-                    10.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
+            if (ModSounds.RINGING != null) {
+                world.playSound(pos.x, pos.y, pos.z, ModSounds.RINGING, SoundCategory.AMBIENT,
+                        10.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
+
+                if (ExplosionOverhaul.CONFIG.debugLogging) {
+                    ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Playing ringing sound at {}", pos);
+                }
+            } else {
+                ExplosionOverhaul.LOGGER.warn("[ExplosionOverhaul] RINGING sound event is null!");
+            }
         }
 
         // Handle screen shake

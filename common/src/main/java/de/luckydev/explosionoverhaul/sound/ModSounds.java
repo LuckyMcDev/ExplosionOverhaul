@@ -9,9 +9,10 @@ import static de.luckydev.explosionoverhaul.ExplosionOverhaul.MOD_ID;
 
 public class ModSounds {
     public static final Identifier RINGING_ID = Identifier.of(MOD_ID, "ear_ringing_after_explosion");
-    public static SoundEvent RINGING = register(RINGING_ID);  // Register the sound event;
+    public static SoundEvent RINGING;
 
     public static void init() {
+        RINGING = register(RINGING_ID);
     }
 
     private static SoundEvent register(Identifier id) {

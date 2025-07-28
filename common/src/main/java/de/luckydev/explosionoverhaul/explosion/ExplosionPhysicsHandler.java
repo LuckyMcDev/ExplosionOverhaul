@@ -6,37 +6,26 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.block.*;
 import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ExplosionPhysicsHandler {
 
     private static final ExplosionConfig CONFIG = ExplosionOverhaul.CONFIG;
 
-    private static final Set<Class<? extends Block>> MULTIBLOCK_CLASSES = new HashSet<>();
-
-    static {
-        MULTIBLOCK_CLASSES.add(BedBlock.class);
-        MULTIBLOCK_CLASSES.add(DoorBlock.class);
-        MULTIBLOCK_CLASSES.add(StairsBlock.class);
-        MULTIBLOCK_CLASSES.add(FenceGateBlock.class);
-        MULTIBLOCK_CLASSES.add(TrapdoorBlock.class);
-        MULTIBLOCK_CLASSES.add(ChestBlock.class);
-        MULTIBLOCK_CLASSES.add(TrappedChestBlock.class);
-        MULTIBLOCK_CLASSES.add(BarrelBlock.class);
-        MULTIBLOCK_CLASSES.add(BannerBlock.class);
-        MULTIBLOCK_CLASSES.add(WallBannerBlock.class);
-    }
+    // Custom tags for explosion behavior
+    public static final TagKey<Block> MULTIBLOCK_PARTS = TagKey.of(Registries.BLOCK.getKey(), Identifier.of(ExplosionOverhaul.MOD_ID, "multiblock_parts"));
+    public static final TagKey<Block> NEVER_LAUNCH = TagKey.of(Registries.BLOCK.getKey(), Identifier.of(ExplosionOverhaul.MOD_ID, "never_launch"));
 
     /**
-     * Process the explosion before vanilla logic destroys blocks.
-     * This replaces blocks we want to turn into debris with air to prevent duplication.
+     * Process the explosion before vanilla logic destroys block.
+     * This replaces block we want to turn into debris with air to prevent duplication.
      */
     public static void processExplosion(World world, Vec3d explosionCenter, ObjectArrayList<BlockPos> affectedBlocks, float power) {
         if (world.isClient() || !CONFIG.enabled) {
@@ -49,7 +38,7 @@ public class ExplosionPhysicsHandler {
         int debrisSpawned = spawnDebris(serverWorld, explosionCenter, affectedBlocks);
 
         if (CONFIG.debugLogging) {
-            ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Processed explosion at {} - Spawned {} debris blocks",
+            ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Processed explosion at {} - Spawned {} debris block",
                     explosionCenter, debrisSpawned);
         }
     }
@@ -74,8 +63,10 @@ public class ExplosionPhysicsHandler {
 
             affectedBlocks.remove(pos);
 
+            // Use flag 3 | 16 to update neighbors and notify clients
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3 | 16);
 
+            // Force neighbor updates for connected block like fences
             world.updateNeighbors(pos, Blocks.AIR);
 
             spawned++;
@@ -132,23 +123,39 @@ public class ExplosionPhysicsHandler {
         }
     }
 
-    private static boolean isMultiblockPart(Block block) {
-        for (Class<? extends Block> clazz : MULTIBLOCK_CLASSES) {
-            if (clazz.isInstance(block)) return true;
-        }
-        return false;
-    }
-
     private static boolean canBeLaunched(BlockState state) {
         if (state.isAir()) return false;
 
-        if(!state.isSolid()) return false;
+        Block block = state.getBlock();
 
+        // Check custom tags first
+        if (state.isIn(NEVER_LAUNCH)) return false;
+        if (state.isIn(MULTIBLOCK_PARTS)) return false;
+
+        // Don't launch block that aren't solid
+        if (!state.isSolid()) return false;
+
+        // Don't launch TNT (let it explode normally)
         if (state.isOf(Blocks.TNT)) return false;
 
+        // Don't launch replaceable block (grass, snow, etc.)
         if (state.isIn(BlockTags.REPLACEABLE)) return false;
 
-        if (isMultiblockPart(state.getBlock())) return false;
+        // Don't launch block with block entities that could cause issues
+        if (state.hasBlockEntity()) {
+            // Allow some safe block entities
+            if (!(block instanceof ChestBlock ||
+                    block instanceof BarrelBlock ||
+                    block instanceof ShulkerBoxBlock ||
+                    block instanceof EnderChestBlock)) {
+                return false;
+            }
+        }
+
+        // Don't launch liquid-logged block
+        if (state.getFluidState() != null && !state.getFluidState().isEmpty()) {
+            return false;
+        }
 
         return true;
     }
