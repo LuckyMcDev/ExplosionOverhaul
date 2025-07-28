@@ -74,7 +74,9 @@ public class ExplosionPhysicsHandler {
 
             affectedBlocks.remove(pos);
 
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3 | 16);
+
+            world.updateNeighbors(pos, Blocks.AIR);
 
             spawned++;
         }
