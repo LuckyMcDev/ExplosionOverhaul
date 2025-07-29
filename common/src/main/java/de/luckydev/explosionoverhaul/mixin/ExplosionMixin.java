@@ -56,7 +56,7 @@ public abstract class ExplosionMixin {
             if (ModSounds.RINGING != null) {
                 world.playSound(
                         pos.x, pos.y, pos.z,
-                        ModSounds.RINGING,
+                        ModSounds.RINGING.get(),
                         SoundCategory.AMBIENT,
                         10.0F,
                         (float) ((1.0F + (Math.random()) * 0.2F) * 0.7F),
