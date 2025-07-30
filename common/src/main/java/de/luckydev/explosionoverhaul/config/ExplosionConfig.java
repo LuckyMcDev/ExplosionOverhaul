@@ -19,7 +19,6 @@ public class ExplosionConfig {
     public int maxHorizontalSpeedPercent = 70;
     public int minUpwardForcePercent = 10;
     public int maxUpwardForcePercent = 30;
-    public boolean allowUnbreakableBlocks = false;
     public boolean randomRotation = true;
 
     // Screen shake settings
@@ -33,14 +32,14 @@ public class ExplosionConfig {
     public float shakeIntensityMultiplier = 1.0f;
 
     // Visual effects settings
-    public boolean enableVisualEffects = true;
+    public boolean enableVisualEffects = false;
     public boolean enableMushroomCloud = true;
     public boolean enableFlashEffect = true;
     public boolean enableShockwaveEffect = true;
     public boolean enableDebrisParticles = true;
     public float visualEffectsIntensity = 1.0f;
     public boolean enableSecondaryEffects = true;
-    public int visualEffectsDistance = 64; // Max distance to render effects
+    public int visualEffectsDistance = 64;
 
     // Sound
     public boolean playRingingSound = false;
