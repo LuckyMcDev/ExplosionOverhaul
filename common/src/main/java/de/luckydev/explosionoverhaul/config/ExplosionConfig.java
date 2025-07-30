@@ -32,6 +32,16 @@ public class ExplosionConfig {
     public boolean shakeScalesWithPower = true;
     public float shakeIntensityMultiplier = 1.0f;
 
+    // Visual effects settings
+    public boolean enableVisualEffects = true;
+    public boolean enableMushroomCloud = true;
+    public boolean enableFlashEffect = true;
+    public boolean enableShockwaveEffect = true;
+    public boolean enableDebrisParticles = true;
+    public float visualEffectsIntensity = 1.0f;
+    public boolean enableSecondaryEffects = true;
+    public int visualEffectsDistance = 64; // Max distance to render effects
+
     // Sound
     public boolean playRingingSound = false;
 
@@ -70,6 +80,10 @@ public class ExplosionConfig {
             maxShakeDurationTicks = minShakeDurationTicks;
             minShakeDurationTicks = tmp;
         }
+
+        // Clamp visual effects settings
+        visualEffectsIntensity = clampFloat(visualEffectsIntensity, 0.1f, 3.0f);
+        visualEffectsDistance = clamp(visualEffectsDistance, 16, 256);
     }
 
     private int clamp(int value, int min, int max) {
@@ -165,5 +179,14 @@ public class ExplosionConfig {
             return shakeRadius;
         }
         return Math.min(explosionPower * 3.0f, shakeRadius);
+    }
+
+    // Visual Effects
+    public boolean shouldRenderVisualEffects(double distanceToPlayer) {
+        return enableVisualEffects && distanceToPlayer <= visualEffectsDistance;
+    }
+
+    public float getScaledVisualIntensity(float explosionPower) {
+        return Math.min(explosionPower * 0.25f * visualEffectsIntensity, 3.0f);
     }
 }

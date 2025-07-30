@@ -5,8 +5,13 @@ import de.luckydev.explosionoverhaul.explosion.ExplosionPhysicsHandler;
 import de.luckydev.explosionoverhaul.sound.ModSounds;
 import de.luckydev.explosionoverhaul.shake.PositionedScreenShake;
 import de.luckydev.explosionoverhaul.shake.ScreenShakeHandler;
+import de.luckydev.explosionoverhaul.effects.ExplosionVisualEffects;
+import de.luckydev.explosionoverhaul.effects.ExplosionParticleHandler;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -51,12 +56,20 @@ public abstract class ExplosionMixin {
     @Unique
     @Environment(EnvType.CLIENT)
     private void ExplosionMixin$handleClientSideEffects(Vec3d pos) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.world == null || client.player == null) return;
+
+        ClientWorld clientWorld = (ClientWorld) world;
+        double distanceToPlayer = client.player.getPos().distanceTo(pos);
+
         // Handle sound effects
         if (ExplosionOverhaul.CONFIG.playRingingSound) {
-            if (ModSounds.RINGING != null) {
+            // Use the registry supplier's get() method to retrieve the sound event
+            SoundEvent ringingSound = ModSounds.RINGING.get();
+            if (ringingSound != null) {
                 world.playSound(
                         pos.x, pos.y, pos.z,
-                        ModSounds.RINGING.get(),
+                        ringingSound,
                         SoundCategory.AMBIENT,
                         10.0F,
                         (float) ((1.0F + (Math.random()) * 0.2F) * 0.7F),
@@ -68,6 +81,28 @@ public abstract class ExplosionMixin {
                 }
             } else {
                 ExplosionOverhaul.LOGGER.warn("[ExplosionOverhaul] RINGING sound event is null!");
+            }
+        }
+
+        // Handle visual effects
+        if (ExplosionOverhaul.CONFIG.shouldRenderVisualEffects(distanceToPlayer)) {
+            // Create flash effect first (immediate)
+            if (ExplosionOverhaul.CONFIG.enableFlashEffect) {
+                ExplosionVisualEffects.createFlashEffect(clientWorld, pos, power);
+            }
+
+            // Create mushroom cloud effect
+            if (ExplosionOverhaul.CONFIG.enableMushroomCloud) {
+                ExplosionVisualEffects.createMushroomCloud(clientWorld, pos, power);
+            }
+
+            // Create additional particle effects
+            if (ExplosionOverhaul.CONFIG.enableDebrisParticles) {
+                ExplosionParticleHandler.createCompleteExplosionEffects(clientWorld, pos, power);
+            }
+
+            if (ExplosionOverhaul.CONFIG.debugLogging) {
+                ExplosionOverhaul.LOGGER.info("[ExplosionOverhaul] Created visual effects at {} with power {}", pos, power);
             }
         }
 
