@@ -41,6 +41,7 @@ public class ExplosionOverhaul {
 
     @SubscribeEvent
     public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
+        if (!ServerConfig.launchFallingBlocks) return;
         if (!(event.getLevel() instanceof ServerLevel level)) return;
 
         var explosion = event.getExplosion();
