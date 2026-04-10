@@ -1,6 +1,7 @@
 package dev.perxenic.explosionoverhaul.mixin;
 
 import dev.perxenic.explosionoverhaul.ExplosionOverhaul;
+import dev.perxenic.explosionoverhaul.ServerConfig;
 import dev.perxenic.explosionoverhaul.content.EOTags;
 import dev.perxenic.explosionoverhaul.infra.FallingBlockEntityData;
 import net.minecraft.core.BlockPos;
@@ -57,27 +58,27 @@ public abstract class FallingBlockStateFixer extends Entity implements FallingBl
     public boolean onBlockPlaced(Level instance, BlockPos pos, BlockState newState, int flags) {
         var blockPos = blockPosition();
         var block = blockState.getBlock();
-        try (var level = this.level()) {
-            if (!explosionOverhaul$getCreatedFromExplosion() || !(blockState.is(EOTags.Blocks.UPDATE_ON_LAND)))
-                return level.setBlock(blockPos, this.blockState, 3);
+        ExplosionOverhaul.LOGGER.info("Test123");
+        if (level().isClientSide()
+                || !explosionOverhaul$getCreatedFromExplosion()
+                || !blockState.is(EOTags.Blocks.UPDATE_ON_LAND)
+                || !ServerConfig.rePlaceTaggedBlocks
+        ) return level().setBlock(blockPos, this.blockState, 3);
 
-            var posVec = new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        ExplosionOverhaul.LOGGER.info("Test234");
 
-            var replacementState = block.getStateForPlacement(new BlockPlaceContext(
-                    level(),
-                    null,
-                    InteractionHand.MAIN_HAND,
-                    new ItemStack(block.asItem()),
-                    new BlockHitResult(posVec, Direction.UP, blockPos, false)
-            ));
+        var posVec = new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 
-            if (replacementState == null) return level.setBlock(blockPos, this.blockState, 3);
+        var replacementState = block.getStateForPlacement(new BlockPlaceContext(
+                level(),
+                null,
+                InteractionHand.MAIN_HAND,
+                new ItemStack(block.asItem()),
+                new BlockHitResult(posVec, Direction.UP, blockPos, false)
+        ));
 
-            return level.setBlock(blockPos, replacementState, 3);
-        } catch (IOException e) {
-            ExplosionOverhaul.LOGGER.error("Could not place falling block. Something has gone very wrong.");
-            throw new RuntimeException(e);
-        }
+        if (replacementState == null) return level().setBlock(blockPos, this.blockState, 3);
 
+        return level().setBlock(blockPos, replacementState, 3);
     }
 }
