@@ -1,6 +1,5 @@
 package dev.perxenic.explosionoverhaul.mixin;
 
-import dev.perxenic.explosionoverhaul.ExplosionOverhaul;
 import dev.perxenic.explosionoverhaul.ServerConfig;
 import dev.perxenic.explosionoverhaul.content.EOTags;
 import dev.perxenic.explosionoverhaul.infra.FallingBlockEntityData;
@@ -57,14 +56,11 @@ public abstract class FallingBlockStateFixer extends Entity implements FallingBl
     public boolean onBlockPlaced(Level instance, BlockPos pos, BlockState newState, int flags) {
         var blockPos = blockPosition();
         var block = blockState.getBlock();
-        ExplosionOverhaul.LOGGER.info("Test123");
         if (level().isClientSide()
                 || !explosionOverhaul$getCreatedFromExplosion()
                 || !blockState.is(EOTags.Blocks.UPDATE_ON_LAND)
                 || !ServerConfig.rePlaceTaggedBlocks
         ) return level().setBlock(blockPos, this.blockState, 3);
-
-        ExplosionOverhaul.LOGGER.info("Test234");
 
         var posVec = new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 
