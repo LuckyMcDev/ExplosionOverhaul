@@ -21,6 +21,10 @@ public class ServerConfig {
             .comment("Amount the direction blocks are launched is randomised")
             .defineInRange("randomDirectionMagnitude", 0.5, 0.0, Double.MAX_VALUE);
 
+    public static final ModConfigSpec.DoubleValue DIRECTION_UPWARDS_BIAS = BUILDER
+            .comment("Amount the direction is biased upwards when launching blocks")
+            .defineInRange("directionUpwardsBias", 0.75, Double.MIN_VALUE, Double.MAX_VALUE);
+
     public static final ModConfigSpec.BooleanValue RE_PLACE_TAGGED_BLOCKS = BUILDER
             .comment("Whether to use custom logic to attempt to re place blocks in update on land tag")
             .define("rePlaceTaggedBlocks", true);
@@ -30,6 +34,7 @@ public class ServerConfig {
     public static boolean launchFallingBlocks;
     public static boolean blockDefaultKnockback;
     public static double randomDirectionMagnitude;
+    public static double directionUpwardsBias;
     public static boolean rePlaceTaggedBlocks;
 
     @SubscribeEvent
@@ -39,6 +44,7 @@ public class ServerConfig {
         launchFallingBlocks = LAUNCH_FALLING_BLOCKS.get();
         blockDefaultKnockback = BLOCK_DEFAULT_KNOCKBACK.get();
         randomDirectionMagnitude = RANDOM_DIRECTION_MAGNITUDE.get();
+        directionUpwardsBias = DIRECTION_UPWARDS_BIAS.get();
         rePlaceTaggedBlocks = RE_PLACE_TAGGED_BLOCKS.get();
     }
 }

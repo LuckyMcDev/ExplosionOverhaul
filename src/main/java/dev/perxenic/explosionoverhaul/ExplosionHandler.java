@@ -71,7 +71,7 @@ public class ExplosionHandler {
     public static Vec3 directionOffset(Vec3 original, RandomSource randomSource) {
         return original.add(
                 (randomSource.nextDouble() * 2 - 1) * ServerConfig.randomDirectionMagnitude,
-                (randomSource.nextDouble() * 2 - 1) * ServerConfig.randomDirectionMagnitude,
+                (randomSource.nextDouble() * 2 - 1) * ServerConfig.randomDirectionMagnitude + ServerConfig.directionUpwardsBias,
                 (randomSource.nextDouble() * 2 - 1) * ServerConfig.randomDirectionMagnitude
         );
     }
