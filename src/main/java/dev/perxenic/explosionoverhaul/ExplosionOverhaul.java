@@ -1,5 +1,6 @@
 package dev.perxenic.explosionoverhaul;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,6 +22,10 @@ public class ExplosionOverhaul {
 
     public ExplosionOverhaul(ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+    }
+
+    public static ResourceLocation eoLoc(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
     @SubscribeEvent
