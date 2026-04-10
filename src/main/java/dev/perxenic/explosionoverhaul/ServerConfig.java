@@ -29,6 +29,8 @@ public class ServerConfig {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
+        if (!(event instanceof ModConfigEvent.Reloading || event instanceof ModConfigEvent.Loading)) return;
+
         launchFallingBlocks = LAUNCH_FALLING_BLOCKS.get();
         blockDefaultKnockback = BLOCK_DEFAULT_KNOCKBACK.get();
         rePlaceTaggedBlocks = RE_PLACE_TAGGED_BLOCKS.get();
