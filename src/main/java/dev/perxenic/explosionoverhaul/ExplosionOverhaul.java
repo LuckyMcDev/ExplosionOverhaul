@@ -73,7 +73,8 @@ public class ExplosionOverhaul {
             processedBlocks.add(pos);
 
             fallingBlock.push(direction);
-            level.getServer().getPlayerList().broadcastAll(new ClientboundSetEntityMotionPacket(fallingBlock.getId(), fallingBlock.getDeltaMovement()));
+            // Hurt marking entity syncs velocity for some reason
+            fallingBlock.hurtMarked = true;
         }
 
         // Remove all blocks from explosion handling that have been processed by Explosion Overhaul
