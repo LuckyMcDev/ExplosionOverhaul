@@ -17,6 +17,10 @@ public class ServerConfig {
             .comment("Whether to use default explosion knockback for launched falling blocks")
             .define("blockDefaultKnockback", false);
 
+    public static final ModConfigSpec.DoubleValue RANDOM_DIRECTION_MAGNITUDE = BUILDER
+            .comment("Amount the direction blocks are launched is randomised")
+            .defineInRange("randomDirectionMagnitude", 0.5, 0.0, Double.MAX_VALUE);
+
     public static final ModConfigSpec.BooleanValue RE_PLACE_TAGGED_BLOCKS = BUILDER
             .comment("Whether to use custom logic to attempt to re place blocks in update on land tag")
             .define("rePlaceTaggedBlocks", true);
@@ -25,6 +29,7 @@ public class ServerConfig {
 
     public static boolean launchFallingBlocks;
     public static boolean blockDefaultKnockback;
+    public static double randomDirectionMagnitude;
     public static boolean rePlaceTaggedBlocks;
 
     @SubscribeEvent
@@ -33,6 +38,7 @@ public class ServerConfig {
 
         launchFallingBlocks = LAUNCH_FALLING_BLOCKS.get();
         blockDefaultKnockback = BLOCK_DEFAULT_KNOCKBACK.get();
+        randomDirectionMagnitude = RANDOM_DIRECTION_MAGNITUDE.get();
         rePlaceTaggedBlocks = RE_PLACE_TAGGED_BLOCKS.get();
     }
 }

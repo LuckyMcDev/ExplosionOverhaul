@@ -4,6 +4,7 @@ import dev.perxenic.explosionoverhaul.content.EOTags;
 import dev.perxenic.explosionoverhaul.infra.FallingBlockEntityData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Explosion;
@@ -54,15 +55,24 @@ public class ExplosionHandler {
     }
     
     public static void launchEntity(Entity entity, Explosion explosion) {
+        var random = entity.getRandom();
         var pos = entity.position();
         var difference = pos.subtract(explosion.center());
         var distance = difference.length();
 
         // If very close to centre, launch directly up to avoid issues with precision errors
-        var direction = (distance < 1e-6) ? new Vec3(0, 1, 0) : difference.normalize();
+        var direction = (distance < 1e-6) ? new Vec3(0, 1, 0) : directionOffset(difference, random).normalize();
 
         entity.push(direction);
         // Hurt marking entity syncs velocity for some reason
         entity.hurtMarked = true;
+    }
+
+    public static Vec3 directionOffset(Vec3 original, RandomSource randomSource) {
+        return original.add(
+                (randomSource.nextDouble() * 2 - 1) * ServerConfig.randomDirectionMagnitude,
+                (randomSource.nextDouble() * 2 - 1) * ServerConfig.randomDirectionMagnitude,
+                (randomSource.nextDouble() * 2 - 1) * ServerConfig.randomDirectionMagnitude
+        );
     }
 }
