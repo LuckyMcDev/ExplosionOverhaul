@@ -22,8 +22,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.io.IOException;
-
 @Mixin(FallingBlockEntity.class)
 public abstract class FallingBlockStateFixer extends Entity implements FallingBlockEntityData {
     @Shadow
@@ -48,6 +46,7 @@ public abstract class FallingBlockStateFixer extends Entity implements FallingBl
 
     // If falling block was created from explosion and block has tag telling it to update when it lands run logic as if player replaced block at this location
     // This is used to prevent fences from looking odd when they have been placed after an explosion
+    @SuppressWarnings("resource")
     @Redirect(
             method = "Lnet/minecraft/world/entity/item/FallingBlockEntity;tick()V",
             at = @At(
