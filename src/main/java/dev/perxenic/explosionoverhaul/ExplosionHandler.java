@@ -63,7 +63,7 @@ public class ExplosionHandler {
         // If very close to centre, launch directly up to avoid issues with precision errors
         var direction = (distance < 1e-6) ? new Vec3(0, 1, 0) : directionOffset(difference, random).normalize();
 
-        entity.push(direction);
+        entity.push(direction.scale(ServerConfig.blockKnockbackForce));
         // Hurt marking entity syncs velocity for some reason
         entity.hurtMarked = true;
     }

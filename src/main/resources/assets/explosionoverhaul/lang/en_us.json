@@ -4,6 +4,7 @@
   "explosionoverhaul.configuration.section.explosionoverhaul.common.toml.title": "Explosion Overhaul Configs",
   "explosionoverhaul.configuration.launchFallingBlocks": "Launch Falling Blocks",
   "explosionoverhaul.configuration.blockDefaultKnockback": "Block Default Knockback",
+  "explosionoverhaul.configuration.blockKnockbackForce": "Block Knockback Force",
   "explosionoverhaul.configuration.randomDirectionMagnitude": "Random Direction Magnitude",
   "explosionoverhaul.configuration.directionUpwardsBias": "Direction Upwards Bias",
   "explosionoverhaul.configuration.rePlaceTaggedBlocks": "Re-Place Tagged Blocks"
