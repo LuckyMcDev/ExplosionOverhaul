@@ -1,6 +1,7 @@
 package dev.perxenic.explosionoverhaul;
 
 import dev.perxenic.explosionoverhaul.content.EOTags;
+import dev.perxenic.explosionoverhaul.infra.FallingBlockEntityData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -37,6 +38,8 @@ public class ExplosionHandler {
             if (blockState.is(EOTags.Blocks.DO_NOT_LAUNCH)) continue;
 
             var fallingBlock = FallingBlockEntity.fall(level, pos, blockState);
+            ((FallingBlockEntityData)fallingBlock).explosionOverhaul$setCreatedFromExplosion(true);
+
             processedBlocks.add(pos);
 
             if (ServerConfig.blockDefaultKnockback) {

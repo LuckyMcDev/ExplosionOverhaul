@@ -28,5 +28,9 @@ public class EOBlockTagProvider extends BlockTagsProvider {
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TNT)
                 .add(Blocks.SUGAR_CANE);
+
+        tag(EOTags.Blocks.UPDATE_ON_LAND)
+                .addTag(BlockTags.FENCES)
+                .addTag(BlockTags.WALLS);
     }
 }
