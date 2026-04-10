@@ -3,6 +3,7 @@
     "#minecraft:replaceable",
     "#minecraft:beds",
     "#minecraft:flowers",
+    "minecraft:tnt",
     "minecraft:sugar_cane"
   ]
 }

@@ -26,6 +26,7 @@ public class EOBlockTagProvider extends BlockTagsProvider {
                 .addTag(BlockTags.REPLACEABLE)
                 .addTag(BlockTags.BEDS)
                 .addTag(BlockTags.FLOWERS)
+                .add(Blocks.TNT)
                 .add(Blocks.SUGAR_CANE);
     }
 }
