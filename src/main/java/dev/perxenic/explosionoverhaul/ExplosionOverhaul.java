@@ -1,5 +1,7 @@
 package dev.perxenic.explosionoverhaul;
 
+import dev.perxenic.explosionoverhaul.content.EOTags;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -9,10 +11,12 @@ import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber
 @Mod(ExplosionOverhaul.MODID)
@@ -30,10 +34,22 @@ public class ExplosionOverhaul {
 
     @SubscribeEvent
     public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
+        var level = event.getLevel();
+
+        // Create a list of all blocks that have been processed by Explosion Overhaul
+        List<BlockPos> processedBlocks = new ArrayList<>();
+
         for (var pos : event.getAffectedBlocks()) {
+            var blockState = level.getBlockState(pos);
+
+            // Do not process blocks tagged to not launch
+            if (blockState.is(EOTags.Blocks.DO_NOT_LAUNCH)) continue;
+
+            processedBlocks.add(pos);
             event.getLevel().setBlock(pos, Blocks.DIAMOND_BLOCK.defaultBlockState(), 0b0000011);
         }
 
-        event.getAffectedBlocks().clear();
+        // Remove all blocks from explosion handling that have been processed by Explosion Overhaul
+        event.getAffectedBlocks().removeAll(processedBlocks);
     }
 }
