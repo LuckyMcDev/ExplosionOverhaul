@@ -1,41 +1,25 @@
-## 💥 Explosion Overhaul
 
-> Cinematic, physics-enhanced explosions that feel powerful and dynamic.
+Installation information
+=======
 
-**Explosion Overhaul** reimagines Minecraft's vanilla explosion system with immersive visual and audio feedback — perfect for tech, combat, or realism-focused modpacks.
+This template repository can be directly cloned to get you started with a new
+mod. Simply create a new repository cloned from this one, by following the
+instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
 
----
+Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
 
-### ✨ Features
+If at any point you are missing libraries in your IDE, or you've run into problems you can
+run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
+{this does not affect your code} and then start the process again.
 
-* **Physics-Based Debris**
-  Explosions launch nearby blocks into the air as falling block entities with randomized speed, arc, and rotation.
+Mapping Names:
+============
+By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
+in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
+license. For the latest license text, refer to the mapping file itself, or the reference copy here:
+https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
 
-* **Screen Shake**
-  Players near an explosion experience configurable camera shake based on blast power and distance.
-
-* **Ear-Ringing Effect**
-  An ambient ringing sound plays when standing close to large explosions, enhancing the feeling of impact.
-
-* **Configurable Everything**
-  Customize behavior via `config/explosion-overhaul.json`, including:
-
-    * Debris count, velocity ranges, and spawn chance
-    * Shake strength, radius, and duration
-    * Sound toggle
-    * Debug logging
-
----
-
-### 🔧 Compatibility
-
-* ✅ **Minecraft 1.21.1**
-* ✅ Fabric & NeoForge (via Architectury)
-* ✅ Works with most mods unless they fully override explosion logic
-
----
-
-### 📜 License
-
-Apache License 2.0 — open source and ready for use in any project.
-[View Source on GitHub](https://github.com/LuckyMcDev/ExplosionOverhaul)
+Additional Resources: 
+==========
+Community Documentation: https://docs.neoforged.net/  
+NeoForged Discord: https://discord.neoforged.net/

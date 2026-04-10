@@ -1,0 +1,13 @@
+{
+  "itemGroup.explosionoverhaul": "Example Mod Tab",
+  "block.explosionoverhaul.example_block": "Example Block",
+  "item.explosionoverhaul.example_item": "Example Item",
+
+  "explosionoverhaul.configuration.title": "Explosion Overhaul Configs",
+  "explosionoverhaul.configuration.section.explosionoverhaul.common.toml": "Explosion Overhaul Configs",
+  "explosionoverhaul.configuration.section.explosionoverhaul.common.toml.title": "Explosion Overhaul Configs",
+  "explosionoverhaul.configuration.items": "Item List",
+  "explosionoverhaul.configuration.logDirtBlock": "Log Dirt Block",
+  "explosionoverhaul.configuration.magicNumberIntroduction": "Magic Number Text",
+  "explosionoverhaul.configuration.magicNumber": "Magic Number"
+}
