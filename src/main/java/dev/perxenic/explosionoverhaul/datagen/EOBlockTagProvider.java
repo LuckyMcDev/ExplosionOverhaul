@@ -5,6 +5,7 @@ import dev.perxenic.explosionoverhaul.content.EOTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +23,9 @@ public class EOBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(EOTags.Blocks.DO_NOT_LAUNCH)
-                .addTag(BlockTags.AIR)
-                .addTag(BlockTags.BEDS);
+                .addTag(BlockTags.REPLACEABLE)
+                .addTag(BlockTags.BEDS)
+                .addTag(BlockTags.FLOWERS)
+                .add(Blocks.SUGAR_CANE);
     }
 }

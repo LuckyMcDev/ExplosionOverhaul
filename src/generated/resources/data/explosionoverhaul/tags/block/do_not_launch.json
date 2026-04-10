@@ -1,6 +1,8 @@
 {
   "values": [
-    "#minecraft:air",
-    "#minecraft:beds"
+    "#minecraft:replaceable",
+    "#minecraft:beds",
+    "#minecraft:flowers",
+    "minecraft:sugar_cane"
   ]
 }
