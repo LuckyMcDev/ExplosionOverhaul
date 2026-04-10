@@ -3,6 +3,7 @@ package dev.perxenic.explosionoverhaul;
 import dev.perxenic.explosionoverhaul.content.EOTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -35,6 +36,11 @@ public class ExplosionOverhaul {
     @SubscribeEvent
     public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
         var level = event.getLevel();
+        var explosion = event.getExplosion();
+
+        // Prevent explosions which do not break blocks from triggering effects
+        if (explosion.getBlockInteraction() == Explosion.BlockInteraction.KEEP) return;
+        if (explosion.getBlockInteraction() == Explosion.BlockInteraction.TRIGGER_BLOCK) return;
 
         // Create a list of all blocks that have been processed by Explosion Overhaul
         List<BlockPos> processedBlocks = new ArrayList<>();
