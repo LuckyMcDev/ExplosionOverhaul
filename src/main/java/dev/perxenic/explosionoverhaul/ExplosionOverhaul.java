@@ -60,21 +60,19 @@ public class ExplosionOverhaul {
             // Do not process blocks tagged to not launch
             if (blockState.is(EOTags.Blocks.DO_NOT_LAUNCH)) continue;
 
-            var posVec = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-            var difference = posVec.subtract(center);
-            var distance = difference.length();
-
-            // Do not process blocks incredibly close to explosion center
-            if (distance < 1e-6) continue;
-
-            var direction = difference.normalize();
-
             var fallingBlock = FallingBlockEntity.fall(level, pos, blockState);
             processedBlocks.add(pos);
 
             if (ServerConfig.blockDefaultKnockback) {
                 event.getAffectedEntities().add(fallingBlock);
             } else {
+                var posVec = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+                var difference = posVec.subtract(center);
+                var distance = difference.length();
+
+                // If very close to centre, launch directly up to avoid issues with precision errors
+                var direction = (distance < 1e-6) ? new Vec3(0, 1, 0) : difference.normalize();
+
                 fallingBlock.push(direction);
                 // Hurt marking entity syncs velocity for some reason
                 fallingBlock.hurtMarked = true;
