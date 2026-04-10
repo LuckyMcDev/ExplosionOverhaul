@@ -38,6 +38,9 @@ public class ExplosionHandler {
             // Do not process blocks tagged to not launch
             if (blockState.is(EOTags.Blocks.DO_NOT_LAUNCH)) continue;
 
+            // Apply chance to launch
+            if (level.random.nextDouble() > ServerConfig.launchBlockChance) continue;
+
             var fallingBlock = FallingBlockEntity.fall(level, pos, blockState);
             ((FallingBlockEntityData)fallingBlock).explosionOverhaul$setCreatedFromExplosion(true);
 

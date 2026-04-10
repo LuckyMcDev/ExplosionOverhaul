@@ -13,6 +13,10 @@ public class ServerConfig {
             .comment("Whether to launch falling blocks after an explosion")
             .define("launchFallingBlocks", true);
 
+    public static final ModConfigSpec.DoubleValue LAUNCH_BLOCK_CHANCE = BUILDER
+            .comment("Chance to launch a given block during an explosion")
+            .defineInRange("launchBlockChance", 0.5, 0.0, 1.0);
+
     public static final ModConfigSpec.BooleanValue BLOCK_DEFAULT_KNOCKBACK = BUILDER
             .comment("Whether to use default explosion knockback for launched falling blocks")
             .define("blockDefaultKnockback", false);
@@ -36,6 +40,7 @@ public class ServerConfig {
     static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean launchFallingBlocks;
+    public static double launchBlockChance;
     public static boolean blockDefaultKnockback;
     public static double randomDirectionMagnitude;
     public static double blockKnockbackForce;
@@ -47,6 +52,7 @@ public class ServerConfig {
         if (event instanceof ModConfigEvent.Unloading) return;
 
         launchFallingBlocks = LAUNCH_FALLING_BLOCKS.get();
+        launchBlockChance = LAUNCH_BLOCK_CHANCE.get();
         blockDefaultKnockback = BLOCK_DEFAULT_KNOCKBACK.get();
         randomDirectionMagnitude = RANDOM_DIRECTION_MAGNITUDE.get();
         blockKnockbackForce = BLOCK_KNOCKBACK_FORCE.get();
