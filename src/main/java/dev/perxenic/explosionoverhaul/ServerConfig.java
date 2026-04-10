@@ -13,12 +13,18 @@ public class ServerConfig {
             .comment("Whether to launch falling blocks after an explosion")
             .define("launchFallingBlocks", true);
 
+    public static final ModConfigSpec.BooleanValue BLOCK_DEFAULT_KNOCKBACK = BUILDER
+            .comment("Whether to use default explosion knockback for launched falling blocks")
+            .define("blockDefaultKnockback", false);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean launchFallingBlocks;
+    public static boolean blockDefaultKnockback;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         launchFallingBlocks = LAUNCH_FALLING_BLOCKS.get();
+        blockDefaultKnockback = BLOCK_DEFAULT_KNOCKBACK.get();
     }
 }

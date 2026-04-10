@@ -2,5 +2,6 @@
   "explosionoverhaul.configuration.title": "Explosion Overhaul Configs",
   "explosionoverhaul.configuration.section.explosionoverhaul.common.toml": "Explosion Overhaul Configs",
   "explosionoverhaul.configuration.section.explosionoverhaul.common.toml.title": "Explosion Overhaul Configs",
-  "explosionoverhaul.configuration.launchFallingBlocks": "Launch Falling Blocks"
+  "explosionoverhaul.configuration.launchFallingBlocks": "Launch Falling Blocks",
+  "explosionoverhaul.configuration.blockDefaultKnockback": "Block Default Knockback"
 }

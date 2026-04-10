@@ -72,9 +72,13 @@ public class ExplosionOverhaul {
             var fallingBlock = FallingBlockEntity.fall(level, pos, blockState);
             processedBlocks.add(pos);
 
-            fallingBlock.push(direction);
-            // Hurt marking entity syncs velocity for some reason
-            fallingBlock.hurtMarked = true;
+            if (ServerConfig.blockDefaultKnockback) {
+                event.getAffectedEntities().add(fallingBlock);
+            } else {
+                fallingBlock.push(direction);
+                // Hurt marking entity syncs velocity for some reason
+                fallingBlock.hurtMarked = true;
+            }
         }
 
         // Remove all blocks from explosion handling that have been processed by Explosion Overhaul
