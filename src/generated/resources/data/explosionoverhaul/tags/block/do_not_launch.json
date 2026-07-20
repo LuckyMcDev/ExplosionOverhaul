@@ -3,7 +3,10 @@
     "#minecraft:replaceable",
     "#minecraft:beds",
     "#minecraft:flowers",
+    "#minecraft:doors",
+    "#c:budding_blocks",
     "minecraft:tnt",
-    "minecraft:sugar_cane"
+    "minecraft:sugar_cane",
+    "minecraft:cactus"
   ]
 }

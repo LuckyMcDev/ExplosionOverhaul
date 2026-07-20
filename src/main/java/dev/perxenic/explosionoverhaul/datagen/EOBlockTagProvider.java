@@ -6,6 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -26,11 +27,15 @@ public class EOBlockTagProvider extends BlockTagsProvider {
                 .addTag(BlockTags.REPLACEABLE)
                 .addTag(BlockTags.BEDS)
                 .addTag(BlockTags.FLOWERS)
+                .addTag(BlockTags.DOORS)
+                .addTag(Tags.Blocks.BUDDING_BLOCKS)
                 .add(Blocks.TNT)
-                .add(Blocks.SUGAR_CANE);
+                .add(Blocks.SUGAR_CANE)
+                .add(Blocks.CACTUS);
 
         tag(EOTags.Blocks.UPDATE_ON_LAND)
                 .addTag(BlockTags.FENCES)
-                .addTag(BlockTags.WALLS);
+                .addTag(BlockTags.WALLS)
+                .addTag(Tags.Blocks.GLASS_PANES);
     }
 }
