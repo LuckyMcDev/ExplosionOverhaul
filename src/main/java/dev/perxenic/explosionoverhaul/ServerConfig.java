@@ -31,7 +31,7 @@ public class ServerConfig {
 
     public static final ModConfigSpec.DoubleValue DIRECTION_UPWARDS_BIAS = BUILDER
             .comment("Amount the direction is biased upwards when launching blocks")
-            .defineInRange("directionUpwardsBias", 0.75, Double.MIN_VALUE, Double.MAX_VALUE);
+            .defineInRange("directionUpwardsBias", 3.0, Double.MIN_VALUE, Double.MAX_VALUE);
 
     public static final ModConfigSpec.BooleanValue RE_PLACE_TAGGED_BLOCKS = BUILDER
             .comment("Whether to use custom logic to attempt to re place blocks in update on land tag")
