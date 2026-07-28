@@ -1,15 +1,25 @@
 {
   "explosionoverhaul.configuration.title": "Explosion Overhaul Configs",
-  "explosionoverhaul.configuration.section.explosionoverhaul.common.toml": "Explosion Overhaul Configs",
-  "explosionoverhaul.configuration.section.explosionoverhaul.common.toml.title": "Explosion Overhaul Configs",
+  "explosionoverhaul.configuration.section.explosionoverhaul.server.toml": "Explosion Overhaul Configs",
+  "explosionoverhaul.configuration.section.explosionoverhaul.server.toml.title": "Explosion Overhaul Configs",
   "explosionoverhaul.configuration.launchFallingBlocks": "Launch Falling Blocks",
+  "explosionoverhaul.configuration.launchFallingBlocks.tooltip": "Whether to launch falling blocks after an explosion",
   "explosionoverhaul.configuration.launchBlockChance": "Launch Block Chance",
+  "explosionoverhaul.configuration.launchBlockChance.tooltip": "Chance to launch a given block during an explosion",
   "explosionoverhaul.configuration.blockDefaultKnockback": "Block Default Knockback",
+  "explosionoverhaul.configuration.blockDefaultKnockback.tooltip": "Whether to use default explosion knockback for launched falling blocks",
   "explosionoverhaul.configuration.blockKnockbackForce": "Block Knockback Force",
+  "explosionoverhaul.configuration.blockKnockbackForce.tooltip": "Amount the blocks are launched when using custom knockback",
   "explosionoverhaul.configuration.randomDirectionMagnitude": "Random Direction Magnitude",
+  "explosionoverhaul.configuration.randomDirectionMagnitude.tooltip": "Amount the direction blocks are launched is randomised",
   "explosionoverhaul.configuration.directionUpwardsBias": "Direction Upwards Bias",
+  "explosionoverhaul.configuration.directionUpwardsBias.tooltip": "Amount the direction is biased upwards when launching blocks",
   "explosionoverhaul.configuration.enableSmokeTrails": "Enable Smoke Trails",
+  "explosionoverhaul.configuration.enableSmokeTrails.tooltip": "Whether exploded blocks should have smoke trails",
   "explosionoverhaul.configuration.smokeParticleChance": "Smoke Particle Chance",
+  "explosionoverhaul.configuration.smokeParticleChance.tooltip": "Chance for a smoking block to emit a trail particle",
   "explosionoverhaul.configuration.smokeParticleSpread": "Smoke Particle Spread",
-  "explosionoverhaul.configuration.rePlaceTaggedBlocks": "Re-Place Tagged Blocks"
+  "explosionoverhaul.configuration.smokeParticleSpread.tooltip": "How fast smoke particles spread out from their original position",
+  "explosionoverhaul.configuration.rePlaceTaggedBlocks": "Re-Place Tagged Blocks",
+  "explosionoverhaul.configuration.rePlaceTaggedBlocks.tooltip": "Whether to use custom logic to attempt to re place blocks in update on land tag"
 }
