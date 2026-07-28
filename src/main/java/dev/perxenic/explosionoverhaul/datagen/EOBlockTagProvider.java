@@ -8,17 +8,14 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.CompletableFuture;
 
 @ParametersAreNonnullByDefault
 public class EOBlockTagProvider extends BlockTagsProvider {
-    public EOBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
-                               @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, ExplosionOverhaul.MODID, existingFileHelper);
+    public EOBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider, ExplosionOverhaul.MODID);
     }
 
     @Override

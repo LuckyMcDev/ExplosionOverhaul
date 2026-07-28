@@ -1,6 +1,6 @@
 package dev.perxenic.explosionoverhaul;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -18,7 +18,7 @@ public class ExplosionOverhaul {
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
     }
 
-    public static ResourceLocation eoLoc(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    public static Identifier eoLoc(String path) {
+        return Identifier.fromNamespaceAndPath(MODID, path);
     }
 }
