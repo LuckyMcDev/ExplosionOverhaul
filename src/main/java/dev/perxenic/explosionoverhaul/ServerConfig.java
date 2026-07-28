@@ -43,7 +43,15 @@ public class ServerConfig {
 
     public static final ModConfigSpec.DoubleValue SMOKE_PARTICLE_SPREAD = BUILDER
             .comment("How fast smoke particles spread out from their original position")
-            .defineInRange("smokeParticleSpread", 0.025, 0.0, 1.0);
+            .defineInRange("smokeParticleSpread", 0.025, 0.0, Double.MAX_VALUE);
+
+    public static final ModConfigSpec.BooleanValue ENABLE_FUSE_SPARKS = BUILDER
+            .comment("Whether primed tnt should emit sparks")
+            .define("enableFuseSparks", true);
+
+    public static final ModConfigSpec.DoubleValue FUSE_SPARK_SPREAD = BUILDER
+            .comment("How fast fuse particles spread out from their original position")
+            .defineInRange("fuseSparkSpread", 0.05, 0.0, Double.MAX_VALUE);
 
     public static final ModConfigSpec.BooleanValue RE_PLACE_TAGGED_BLOCKS = BUILDER
             .comment("Whether to use custom logic to attempt to re place blocks in update on land tag")
@@ -60,6 +68,8 @@ public class ServerConfig {
     public static boolean enableSmokeTrails;
     public static double smokeParticleChance;
     public static double smokeParticleSpread;
+    public static boolean enableFuseSparks;
+    public static double fuseSparkSpread;
     public static boolean rePlaceTaggedBlocks;
 
     @SubscribeEvent
@@ -75,6 +85,8 @@ public class ServerConfig {
         enableSmokeTrails = ENABLE_SMOKE_TRAILS.get();
         smokeParticleChance = SMOKE_PARTICLE_CHANCE.get();
         smokeParticleSpread = SMOKE_PARTICLE_SPREAD.get();
+        enableFuseSparks = ENABLE_FUSE_SPARKS.get();
+        fuseSparkSpread = FUSE_SPARK_SPREAD.get();
         rePlaceTaggedBlocks = RE_PLACE_TAGGED_BLOCKS.get();
     }
 }

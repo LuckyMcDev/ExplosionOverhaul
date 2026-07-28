@@ -3,7 +3,8 @@
   "package": "dev.perxenic.explosionoverhaul.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FallingBlockMixin"
+    "FallingBlockMixin",
+    "PrimedTntMixin"
   ],
   "injectors": {
     "defaultRequire": 1
