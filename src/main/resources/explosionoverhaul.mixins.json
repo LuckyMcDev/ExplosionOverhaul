@@ -3,7 +3,7 @@
   "package": "dev.perxenic.explosionoverhaul.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FallingBlockStateFixer"
+    "FallingBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
