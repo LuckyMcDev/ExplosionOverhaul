@@ -33,6 +33,18 @@ public class ServerConfig {
             .comment("Amount the direction is biased upwards when launching blocks")
             .defineInRange("directionUpwardsBias", 3.0, Double.MIN_VALUE, Double.MAX_VALUE);
 
+    public static final ModConfigSpec.BooleanValue ENABLE_SMOKE_TRAILS = BUILDER
+            .comment("Whether exploded blocks should have smoke trails")
+            .define("enableSmokeTrails", true);
+
+    public static final ModConfigSpec.DoubleValue SMOKE_PARTICLE_CHANCE = BUILDER
+            .comment("Chance for a smoking block to emit a trail particle")
+            .defineInRange("smokeParticleChance", 0.2, 0.0, 1.0);
+
+    public static final ModConfigSpec.DoubleValue SMOKE_PARTICLE_SPREAD = BUILDER
+            .comment("How fast smoke particles spread out from their original position")
+            .defineInRange("smokeParticleSpread", 0.025, 0.0, 1.0);
+
     public static final ModConfigSpec.BooleanValue RE_PLACE_TAGGED_BLOCKS = BUILDER
             .comment("Whether to use custom logic to attempt to re place blocks in update on land tag")
             .define("rePlaceTaggedBlocks", true);
@@ -45,6 +57,9 @@ public class ServerConfig {
     public static double randomDirectionMagnitude;
     public static double blockKnockbackForce;
     public static double directionUpwardsBias;
+    public static boolean enableSmokeTrails;
+    public static double smokeParticleChance;
+    public static double smokeParticleSpread;
     public static boolean rePlaceTaggedBlocks;
 
     @SubscribeEvent
@@ -57,6 +72,9 @@ public class ServerConfig {
         randomDirectionMagnitude = RANDOM_DIRECTION_MAGNITUDE.get();
         blockKnockbackForce = BLOCK_KNOCKBACK_FORCE.get();
         directionUpwardsBias = DIRECTION_UPWARDS_BIAS.get();
+        enableSmokeTrails = ENABLE_SMOKE_TRAILS.get();
+        smokeParticleChance = SMOKE_PARTICLE_CHANCE.get();
+        smokeParticleSpread = SMOKE_PARTICLE_SPREAD.get();
         rePlaceTaggedBlocks = RE_PLACE_TAGGED_BLOCKS.get();
     }
 }

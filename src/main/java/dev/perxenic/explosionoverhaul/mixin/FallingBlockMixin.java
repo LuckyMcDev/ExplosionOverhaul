@@ -93,11 +93,12 @@ public abstract class FallingBlockMixin extends Entity implements FallingBlockEn
     public void addSmokeParticles(CallbackInfo ci)
     {
         if (!explosionOverhaul$createdFromExplosion) return;
+        if (!ServerConfig.enableSmokeTrails) return;
 
         if (level().isClientSide()) return;
         var serverLevel = (ServerLevel) level();
 
-        if (getRandom().nextDouble() > 0.2) return;
+        if (getRandom().nextDouble() > ServerConfig.smokeParticleChance) return;
 
         var position = position();
         serverLevel.sendParticles(
@@ -109,7 +110,7 @@ public abstract class FallingBlockMixin extends Entity implements FallingBlockEn
                 0.0,
                 0.0,
                 0.0,
-                0.025
+                ServerConfig.smokeParticleSpread
         );
     }
 }

@@ -8,5 +8,8 @@
   "explosionoverhaul.configuration.blockKnockbackForce": "Block Knockback Force",
   "explosionoverhaul.configuration.randomDirectionMagnitude": "Random Direction Magnitude",
   "explosionoverhaul.configuration.directionUpwardsBias": "Direction Upwards Bias",
+  "explosionoverhaul.configuration.enableSmokeTrails": "Enable Smoke Trails",
+  "explosionoverhaul.configuration.smokeParticleChance": "Smoke Particle Chance",
+  "explosionoverhaul.configuration.smokeParticleSpread": "Smoke Particle Spread",
   "explosionoverhaul.configuration.rePlaceTaggedBlocks": "Re-Place Tagged Blocks"
 }
