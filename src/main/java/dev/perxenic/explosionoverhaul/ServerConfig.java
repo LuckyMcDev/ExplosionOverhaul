@@ -31,7 +31,7 @@ public class ServerConfig {
 
     public static final ModConfigSpec.DoubleValue DIRECTION_UPWARDS_BIAS = BUILDER
             .comment("Amount the direction is biased upwards when launching blocks")
-            .defineInRange("directionUpwardsBias", 3.0, Double.MIN_VALUE, Double.MAX_VALUE);
+            .defineInRange("directionUpwardsBias", 3.0, 0.0, Double.MAX_VALUE);
 
     public static final ModConfigSpec.BooleanValue ENABLE_SMOKE_TRAILS = BUILDER
             .comment("Whether exploded blocks should have smoke trails")
