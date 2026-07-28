@@ -37,6 +37,16 @@ public abstract class ExplosionMixin {
 
     @Shadow public float power;
 
+    @Shadow
+    @Final
+    private Explosion.DestructionType destructionType;
+
+    @Unique
+    private boolean explosionoverhaul$damagesWorld() {
+        return destructionType != Explosion.DestructionType.KEEP &&
+                destructionType != Explosion.DestructionType.TRIGGER_BLOCK;
+    }
+
     // Hook into affectWorld at HEAD to handle our custom logic before vanilla processing
     @Inject(method = "affectWorld", at = @At("HEAD"))
     private void onPreAffectWorld(boolean spawnParticles, CallbackInfo ci) {
@@ -48,7 +58,7 @@ public abstract class ExplosionMixin {
         }
 
         // Handle server-side physics (debris spawning)
-        if (!world.isClient()) {
+        if (!world.isClient() && explosionoverhaul$damagesWorld()) {
             ExplosionPhysicsHandler.processExplosion(world, pos, affectedBlocks, power);
         }
     }
